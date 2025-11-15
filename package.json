@@ -1,0 +1,49 @@
+{
+  "name": "notehooks",
+  "version": "1.0.0",
+  "description": "Some react hooks for modern web development",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "build:dev": "cross-env NODE_ENV=development rollup -c",
+    "build:prod": "cross-env NODE_ENV=production rollup -c",
+    "dev": "rollup -c -w",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build:prod"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "mobile",
+    "responsive",
+    "breakpoint",
+    "typescript",
+    "react-hooks",
+    "utilities",
+    "permissions",
+    "scroll",
+    "browser-api",
+    "performance"
+  ],
+  "author": "Mitsyyydev",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-typescript": "^12.3.0",
+    "@types/react": "^19.2.5",
+    "cross-env": "^10.1.0",
+    "rollup": "^4.53.2",
+    "rollup-plugin-dts": "^6.2.3",
+    "tslib": "^2.8.1",
+    "typescript": "^5.9.3"
+  }
+}
