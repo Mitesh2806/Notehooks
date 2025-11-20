@@ -1,47 +1,62 @@
 import { useState, useCallback, useEffect } from 'react';
 
-export interface UseAsyncReturnType<T, A extends any[]> {
-    loading: boolean;
-    error: Error | null;
-    value: T | null;
-    run: (...args: A) => Promise<T>;
-    trigger: boolean;
+export interface UseAsyncOptions<A extends any[] = any[]> {
+  /**
+   * Whether to execute the function immediately when the component mounts.
+   * @default false
+   */
+  immediate?: boolean; 
+  
+  /**
+   * The arguments to pass to the function if immediate is true.
+   * Required if your function expects arguments and immediate is true.
+   */
+  initialArgs?: A;
 }
 
-export default function useAsync<T, A extends any[] = any[]>(
-    fn: (...args: A) => Promise<T>,
-    trigger = false,
-    initialArgs?: A // 1. Accept initial arguments here
+export interface UseAsyncReturnType<T, A extends any[]> {
+  loading: boolean;
+  error: Error | null;
+  value: T | null;
+  /**
+   * The function to trigger the async operation manually.
+   */
+  execute: (...args: A) => Promise<T>; 
+}
+
+export function useAsync<T, A extends any[] = any[]>(
+  fn: (...args: A) => Promise<T>,
+  options: UseAsyncOptions<A> = {}
 ): UseAsyncReturnType<T, A> {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<Error | null>(null);
-    const [value, setValue] = useState<T | null>(null);
+  const { immediate = false, initialArgs } = options;
 
-    const run = useCallback(async (...args: A) => {
-        setLoading(true);
-        setError(null);
-        setValue(null);
-        try {
-            const res = await fn(...args);
-            setValue(res);
-            return res;
-        } catch (err) {
-            
-            const errObj = err instanceof Error ? err : new Error(String(err));
-            setError(errObj);
-            throw errObj;
-        } finally {
-            setLoading(false);
-        }
-    }, [fn]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [value, setValue] = useState<T | null>(null);
 
-    useEffect(() => {
-        if (trigger) {
-           
-            run(...(initialArgs || [] as unknown as A));
-        }
+  const execute = useCallback(async (...args: A) => {
+    setLoading(true);
+    setError(null);
+    setValue(null);
+    try {
+      const res = await fn(...args);
+      setValue(res);
+      return res;
+    } catch (err) {
+      const errObj = err instanceof Error ? err : new Error(String(err));
+      setError(errObj);
+      throw errObj;
+    } finally {
+      setLoading(false);
+    }
+  }, [fn]);
+
+  useEffect(() => {
+    if (immediate) {
+      execute(...(initialArgs || [] as unknown as A));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trigger, run]); 
+  }, [immediate, execute]);
 
-    return { trigger, loading, error, value, run };
+  return { loading, error, value, execute };
 }

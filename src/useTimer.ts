@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 
-/** Configuration options for the useCountdown hook */
+/** Configuration options for the useTimer hook */
 export interface UseTimerOptions {
   /** Target date to countdown to. When reached, countdown completes */
   targetDate?: Date;
@@ -14,8 +14,8 @@ export interface UseTimerOptions {
   interval?: number;
 }
 
-/** Return values from the useCountdown hook */
-export interface CountdownReturn {
+/** Return values from the useTimer hook */
+export interface UseTimerReturnType {
   /** Time remaining in seconds */
   timeLeft: number;
   /** Whether the countdown is currently running */
@@ -63,7 +63,7 @@ const calculateTimeLeft = (targetDate: Date): number => {
  *   - If number: Creates countdown for that many seconds
  *   - If object: Full configuration with targetDate, initialSeconds, callbacks, etc.
  *
- * @returns CountdownReturn object containing:
+ * @returns UseTimerReturn object containing:
  *   - timeLeft: Time remaining in seconds
  *   - isActive: Whether countdown is currently running
  *   - isCompleted: Whether countdown has finished
@@ -74,11 +74,11 @@ const calculateTimeLeft = (targetDate: Date): number => {
  *
  * @example
  * // Simple 60-second countdown
- * const { timeLeft, formattedTime } = useCountdown(60);
+ * const { timeLeft, formattedTime } = useTimer(60);
  *
  * @example
  * // Countdown to specific date
- * const { timeLeft, isCompleted } = useCountdown(new Date('2024-12-31'));
+ * const { timeLeft, isCompleted } = useTimer(new Date('2024-12-31'));
  *
  * @example
  * // Advanced usage with full control
@@ -100,9 +100,9 @@ const calculateTimeLeft = (targetDate: Date): number => {
  * const { formattedTime } = useCountdown(3665); // 1 hour, 1 minute, 5 seconds
  * // formattedTime = { days: 0, hours: 1, minutes: 1, seconds: 5 }
  */
-export const useCountdown = (
+export const useTimer = (
   options: UseTimerOptions | Date | number
-): CountdownReturn => {
+): UseTimerReturnType => {
   // Normalize input options to a consistent configuration object
   const config: UseTimerOptions =
     typeof options === "number"
