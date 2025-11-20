@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@gourav2609'
+          scope: '@mitsan'
           
       - name: Install dependencies
         run: npm ci
